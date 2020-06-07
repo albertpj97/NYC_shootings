@@ -3,7 +3,7 @@ library(tidyverse)
 library(ggraph)
 library(networkD3)
 library(ggalluvial)
-
+library(ggmap)
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
@@ -117,6 +117,8 @@ ggplot(table_Sankey,aes(y=Freq,axis1=PERP_AGE_GROUP,axis2=VIC_AGE_GROUP))+
   geom_alluvium(aes(fill=Freq),width = 1/12)+
   geom_stratum( fill = "black", color = "grey") +
   geom_label(stat = "stratum", infer.label = TRUE)
+
+
 
 
 
