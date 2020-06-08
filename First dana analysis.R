@@ -3,7 +3,7 @@ library(tidyverse)
 library(ggraph)
 library(networkD3)
 library(ggalluvial)
-library(ggmap)
+library(sf)
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
@@ -122,3 +122,15 @@ ggplot(table_Sankey,aes(y=Freq,axis1=PERP_AGE_GROUP,axis2=VIC_AGE_GROUP))+
 
 
 
+
+# New York Maps -----------------------------------------------------------
+
+library("rnaturalearth")
+library("rnaturalearthdata")
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(-74.257159, -73.699215), ylim = c( 40.495992,40.915568), expand = TRUE)
+
+# Utilizar el de Google Maps
