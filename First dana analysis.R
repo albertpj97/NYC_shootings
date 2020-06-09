@@ -1,36 +1,24 @@
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-
-=======
-
-library(ggplot2)
-=======
 cat("\f")
+library(ggplot2)
 library(tidyverse)
 library(ggraph)
 library(networkD3)
 library(ggmap)
 <<<<<<< HEAD
+<<<<<<< HEAD
 library(ggalluvial)
 
 >>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
 =======
+=======
+>>>>>>> 204e044aafa35a757c48510a8504655c1f2b16ac
 library(alluvial)
-library(sf)
->>>>>>> 02b07cde051af64ff28a81c82119b2ef02c41d08
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
 summary(NYPD)
 sapply(NYPD, class)
 
-<<<<<<< HEAD
-(BAR_Boro<-ggplot(data=NYPD,aes(x=BORO))+
-    geom_bar(stat='count'))
-BAR_Boro
->>>>>>> adcb2d50f67b8dc0129d2d4114e04d6ec42abca7
-=======
 # Diagramas de Barras -------------------------------------------------------------
 
 # 1-BORO
@@ -146,8 +134,6 @@ alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Bla
 
 # New York Maps -----------------------------------------------------------
 
-
-
 register_google("AIzaSyAHRBrlHqXuah69QsJ9AEGVT3yHPkmAff4")
 NYC.map <- get_map("New york city, USA",zoom=11)
 
@@ -161,17 +147,39 @@ ggmap(NYC.map) +
 # heat map --------------------------------------------------------------
 
 ## Remover los datos sin localización
-NYPD$Latitude[NYPD$Latitude == ''] <- NA
-NYPD$Longitude[NYPD$Latitude == ''] <- NA
-NYPD <- na.omit(NYPD)
+NYPDmap <- NYPD
+NYPDmap$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap <- na.omit(NYPDmap)
 
 #Crear el dataframe con coordenadas y frecuencia
-locationShootings <- as.data.frame(table(NYPD$Longitude, NYPD$Latitude))
+locationShootings <- as.data.frame(table(NYPDmap$Longitude, NYPDmap$Latitude))
 names(locationShootings) <- c('long', 'lat', 'Frequency')
 locationShootings$long <- as.numeric(as.character(locationShootings$long))
 locationShootings$lat <- as.numeric(as.character(locationShootings$lat))
 locationShootings <- subset(locationShootings, Frequency > 0)
 
 #crear el mapa
-ggmap(NYC.map) + geom_tile(data = locationShootings, aes(x = long, y = lat, alpha = Frequency),
-                           fill = 'red') + theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+ggmap(NYC.map) + geom_point(data = locationShootings, aes(x = long, y = lat, alpha = Frequency), colour = "red") +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+
+
+# Perpetrator ethnicity bubble map ----------------------------------------
+## Remover los datos sin localización
+
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$PERP_RACE[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
+#Crear el dataframe con coordenadas y frecuencia
+locationShootings2 <- as.data.frame(table(NYPDmap2$Longitude, NYPDmap2$Latitude,NYPDmap2$PERP_RACE))
+names(locationShootings2) <- c('long', 'lat', 'Race')
+locationShootings2$long <- as.numeric(as.character(locationShootings2$long))
+locationShootings2$lat <- as.numeric(as.character(locationShootings2$lat))
+
+
+ggmap(NYC.map) + geom_point(data =locationShootings2, aes(x = long, y = lat, colour = Race))
+          +theme(axis.title.y = element_blank(), axis.title.x = element_blank())
