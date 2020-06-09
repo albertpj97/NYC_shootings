@@ -1,36 +1,16 @@
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-
-=======
-
-library(ggplot2)
-=======
 cat("\f")
+library(ggplot2)
 library(tidyverse)
 library(ggraph)
 library(networkD3)
 library(ggmap)
-<<<<<<< HEAD
-library(ggalluvial)
-
->>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
-=======
 library(alluvial)
-library(sf)
->>>>>>> 02b07cde051af64ff28a81c82119b2ef02c41d08
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
 summary(NYPD)
 sapply(NYPD, class)
 
-<<<<<<< HEAD
-(BAR_Boro<-ggplot(data=NYPD,aes(x=BORO))+
-    geom_bar(stat='count'))
-BAR_Boro
->>>>>>> adcb2d50f67b8dc0129d2d4114e04d6ec42abca7
-=======
 # Diagramas de Barras -------------------------------------------------------------
 
 # 1-BORO
@@ -145,8 +125,6 @@ table_Sankey_2
 alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col = 1:5)
 
 # New York Maps -----------------------------------------------------------
-
-
 
 register_google("AIzaSyAHRBrlHqXuah69QsJ9AEGVT3yHPkmAff4")
 NYC.map <- get_map("New york city, USA",zoom=11)
