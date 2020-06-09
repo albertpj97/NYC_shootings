@@ -10,6 +10,7 @@ cat("\f")
 library(tidyverse)
 library(ggraph)
 library(networkD3)
+library(ggmap)
 <<<<<<< HEAD
 library(ggalluvial)
 
@@ -146,6 +147,31 @@ alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Bla
 # New York Maps -----------------------------------------------------------
 
 
-# Utilizar el de Google Maps
 
->>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
+register_google("AIzaSyAHRBrlHqXuah69QsJ9AEGVT3yHPkmAff4")
+NYC.map <- get_map("New york city, USA",zoom=11)
+
+
+ggmap(NYC.map) + 
+  geom_point(data=NYPD,
+             aes(x=Longitude,y=Latitude),
+             size=2,alpha=.2)
+
+
+# heat map --------------------------------------------------------------
+
+## Remover los datos sin localización
+NYPD$Latitude[NYPD$Latitude == ''] <- NA
+NYPD$Longitude[NYPD$Latitude == ''] <- NA
+NYPD <- na.omit(NYPD)
+
+#Crear el dataframe con coordenadas y frecuencia
+locationShootings <- as.data.frame(table(NYPD$Longitude, NYPD$Latitude))
+names(locationShootings) <- c('long', 'lat', 'Frequency')
+locationShootings$long <- as.numeric(as.character(locationShootings$long))
+locationShootings$lat <- as.numeric(as.character(locationShootings$lat))
+locationShootings <- subset(locationShootings, Frequency > 0)
+
+#crear el mapa
+ggmap(NYC.map) + geom_tile(data = locationShootings, aes(x = long, y = lat, alpha = Frequency),
+                           fill = 'red') + theme(axis.title.y = element_blank(), axis.title.x = element_blank())
