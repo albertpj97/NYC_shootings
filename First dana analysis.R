@@ -10,13 +10,19 @@ cat("\f")
 library(tidyverse)
 library(ggraph)
 library(networkD3)
+<<<<<<< HEAD
 library(ggalluvial)
 
 >>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
+=======
+library(alluvial)
+library(sf)
+>>>>>>> 02b07cde051af64ff28a81c82119b2ef02c41d08
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
 summary(NYPD)
+sapply(NYPD, class)
 
 <<<<<<< HEAD
 (BAR_Boro<-ggplot(data=NYPD,aes(x=BORO))+
@@ -111,28 +117,35 @@ ggplot(Count_VIC_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=VIC_SEX)) +
 
 df_Sankey<-NYPD[c('PERP_RACE','VIC_RACE')]
 df_Sankey[df_Sankey=='']<-NaN
+df_Sankey<-transform(df_Sankey,PERP_RACE=as.character(PERP_RACE),VIC_RACE=as.character(VIC_RACE))
 df_Sankey<-na.omit(df_Sankey)
+df_Sankey[df_Sankey=='AMERICAN INDIAN/ALASKAN NATIVE'|df_Sankey=='ASIAN / PACIFIC ISLANDER']<-"OTHER"
 table_Sankey<-as.data.frame(table(df_Sankey))
-table_Sankey
+table_Sankey[table_Sankey=='UNKNOWN']<-NaN
+table_Sankey<-na.omit(table_Sankey)
 
-ggplot(table_Sankey,aes(y=Freq,axis1=PERP_RACE,axis2=VIC_RACE))+
-  geom_alluvium(aes(fill=Freq),width = 1/12)+
-  geom_stratum( fill = "black", color = "grey") +
-  geom_label(stat = "stratum", infer.label = TRUE)
+alluvial(table_Sankey[,1:2],freq=table_Sankey$Freq,border="Black",
+         col=1:5,alpha = 0.5)
+
 
 # AGE
+df_Sankey_2<-NYPD[c('PERP_AGE_GROUP','VIC_AGE_GROUP')]
+df_Sankey_2<-transform(df_Sankey_2,PERP_AGE_GROUP=as.character(PERP_AGE_GROUP),VIC_AGE_GROUP=as.character(VIC_AGE_GROUP))
+df_Sankey_2[(df_Sankey_2=='1020')]<-''
+df_Sankey_2[df_Sankey_2=='224']<-''
+df_Sankey_2[df_Sankey_2=='940']<-""
+df_Sankey_2[df_Sankey_2=='']<-NaN
+df_Sankey_2<-na.omit(df_Sankey_2)
+table_Sankey_2<-as.data.frame(table(df_Sankey_2))
+table_Sankey_2[table_Sankey_2=='UNKNOWN']<-NaN
+table_Sankey_2<-na.omit(table_Sankey_2)
+table_Sankey_2
 
-df_Sankey<-NYPD[c('PERP_AGE_GROUP','VIC_AGE_GROUP')]
-df_Sankey[df_Sankey=='']<-NaN
-df_Sankey<-na.omit(df_Sankey)
-table_Sankey<-as.data.frame(table(df_Sankey))
-table_Sankey
+alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col = 1:5)
 
-ggplot(table_Sankey,aes(y=Freq,axis1=PERP_AGE_GROUP,axis2=VIC_AGE_GROUP))+
-  geom_alluvium(aes(fill=Freq),width = 1/12)+
-  geom_stratum( fill = "black", color = "grey") +
-  geom_label(stat = "stratum", infer.label = TRUE)
+# New York Maps -----------------------------------------------------------
 
 
+# Utilizar el de Google Maps
 
 >>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
