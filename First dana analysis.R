@@ -4,6 +4,8 @@ library(tidyverse)
 library(networkD3)
 library(ggmap)
 library(alluvial)
+library(ggthemes)
+library(scales)
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
 
@@ -76,9 +78,10 @@ Count_STATISTICAL_MURDER_FLAG
 PIE_1<-ggplot(Count_STATISTICAL_MURDER_FLAG, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=STATISTICAL_MURDER_FLAG)) +
   geom_rect()+
   coord_polar(theta="y")+
-  xlim(c(2, 4)) + theme_wsj() +
-  ggtitle("Muertes en Tiroteos")
-PIE_1+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
+  xlim(c(2, 4)) + theme_void() +
+  ggtitle("Muertes en Tiroteos")+
+  geom_label(x=3.5,aes(y=c(0.5,0.9),label=c("No","Yes")),size=6)
+PIE_1+theme(legend.position = "none")
 
 # 2 - PERP_SEX
 Count_PERP_SEX = NYPD %>% group_by(PERP_SEX) %>% count(PERP_SEX)
@@ -88,10 +91,14 @@ Count_PERP_SEX$ymax = cumsum(Count_PERP_SEX$fraction)
 Count_PERP_SEX$ymin = c(0, head(Count_PERP_SEX$ymax, n=-1))
 Count_PERP_SEX
 
-ggplot(Count_PERP_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=PERP_SEX)) +
+PIE_2<-ggplot(Count_PERP_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=PERP_SEX)) +
   geom_rect()+
   coord_polar(theta="y")+
-  xlim(c(2, 4)) + theme_void()
+  xlim(c(2, 4)) + theme_void()+
+  ggtitle('Sexo del Autor')+
+  geom_label(x=3.5,aes(y=c(0.06,0.5),label=c("F","M")),size=6)
+PIE_2+theme(legend.position = 'none')
+
 
 # 3 - VIC_SEX
 Count_VIC_SEX = NYPD %>% group_by(VIC_SEX) %>% count(VIC_SEX)
@@ -101,10 +108,13 @@ Count_VIC_SEX$ymax = cumsum(Count_VIC_SEX$fraction)
 Count_VIC_SEX$ymin = c(0, head(Count_VIC_SEX$ymax, n=-1))
 Count_VIC_SEX
 
-ggplot(Count_VIC_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=VIC_SEX)) +
+PIE_3<-ggplot(Count_VIC_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=VIC_SEX)) +
   geom_rect()+
   coord_polar(theta="y")+
-  xlim(c(2, 4)) + theme_void()
+  xlim(c(2, 4)) + theme_void()+
+  ggtitle('Sexo de la Victima')+
+  geom_label(x=3.5,aes(y=c(0.05,0.5),label=c("F","M")),size=6)
+PIE_3+theme(legend.position = 'none')
 
 # Sankey Diagram ----------------------------------------------------------
 
@@ -120,7 +130,9 @@ table_Sankey[table_Sankey=='UNKNOWN']<-NaN
 table_Sankey<-na.omit(table_Sankey)
 
 alluvial(table_Sankey[,1:2],freq=table_Sankey$Freq,border="Black",
-         col=1:5,alpha = 0.5)
+         col=1:5,alpha = 0.5,gap.width = 0,
+         cw=0.1, axis_labels = c('Raza del Autor','Raza de la Victima'),
+         cex=0.55, blocks = TRUE)
 
 
 # AGE
@@ -137,7 +149,10 @@ table_Sankey_2[table_Sankey_2=='UNKNOWN']<-NaN
 table_Sankey_2<-na.omit(table_Sankey_2)
 table_Sankey_2
 
-alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col=1:4)
+alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col=1:4,
+         gap.width = 0,
+         cw=0.1, axis_labels = c('Edad del Autor','Edad de la Victima'),
+         cex=0.9, blocks = TRUE)
 
 # New York Maps -----------------------------------------------------------
 
