@@ -134,7 +134,7 @@ alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Bla
 
 # New York Maps -----------------------------------------------------------
 
-register_google("AIzaSyAHRBrlHqXuah69QsJ9AEGVT3yHPkmAff4")
+register_google("[api key]")
 NYC.map <- get_map("New york city, USA",zoom=11)
 
 
