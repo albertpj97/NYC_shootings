@@ -1,17 +1,8 @@
 cat("\f")
 library(ggplot2)
 library(tidyverse)
-library(ggraph)
 library(networkD3)
 library(ggmap)
-<<<<<<< HEAD
-<<<<<<< HEAD
-library(ggalluvial)
-
->>>>>>> fdbf12bbcaab5ec2c4934cae179b16343e34c259
-=======
-=======
->>>>>>> 204e044aafa35a757c48510a8504655c1f2b16ac
 library(alluvial)
 
 NYPD<-read.csv('NYPD_Shooting_Incident_Data__Historic.csv')
@@ -24,8 +15,11 @@ sapply(NYPD, class)
 # 1-BORO
 Count_BORO = NYPD %>% group_by(BORO) %>% count(BORO)
 
-(Bar_BORO<-ggplot(Count_BORO,aes(x=reorder(BORO,-n),y=n,fill=n))+
-    geom_bar(stat='identity') + theme_classic())
+Bar_BORO<-ggplot(Count_BORO,aes(x=reorder(BORO,-n),y=n,fill=n))+
+  geom_col()+
+  scale_fill_gradient(low = "gray80",high='grey40')+ theme_calc()+
+  xlab("Borough") + ylab("Total # of Shootings")+ggtitle("Tiroteos por Barrio")
+Bar_BORO+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # 2-PERP_AGE_GROUP
 Count_PERP_AGE_GROUP = NYPD %>% group_by(PERP_AGE_GROUP) %>% count(PERP_AGE_GROUP)
@@ -33,8 +27,11 @@ Count_PERP_AGE_GROUP<-transform(Count_PERP_AGE_GROUP,PERP_AGE_GROUP=as.character
 Count_PERP_AGE_GROUP<-Count_PERP_AGE_GROUP[-c(1,3,5,9,10),]
 Count_PERP_AGE_GROUP
 
-(Bar_PERP_AGE_GROUP<-ggplot(na.omit(Count_PERP_AGE_GROUP),aes(x=reorder(PERP_AGE_GROUP,-n),y=n,fill=n))+
-    geom_bar(stat='identity',colour="black")+theme_grey())
+Bar_PERP_AGE_GROUP<-ggplot(na.omit(Count_PERP_AGE_GROUP),aes(x=reorder(PERP_AGE_GROUP,-n),y=n,fill=n))+
+  geom_col()+
+  scale_fill_gradient(low = "green1",high='green4')+ theme_calc()+
+  xlab("Age of Perpetrator") + ylab("Total # of Shootings")+ggtitle("Edad del Autor del Tiroteo")
+Bar_PERP_AGE_GROUP+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # 3-PERP_RACE
 Count_PERP_RACE = NYPD %>% group_by(PERP_RACE) %>% count(PERP_RACE)
@@ -42,21 +39,30 @@ Count_PERP_RACE <- transform(Count_PERP_RACE,PERP_RACE=as.character(PERP_RACE))
 Count_PERP_RACE<-Count_PERP_RACE[-c(1,2),]
 Count_PERP_RACE
 
-(Bar_PERP_RACE<-ggplot(Count_PERP_RACE,aes(x=reorder(PERP_RACE,-n),y=n))+
-    geom_bar(stat='identity'))
+
+Bar_PERP_RACE<-ggplot(Count_PERP_RACE,aes(x=reorder(PERP_RACE,-n),y=as.numeric(n),fill=n))+
+  geom_col()+
+  scale_fill_gradient(low = "Yellow",high='Red')+ theme_calc()+
+  xlab("Race") + ylab("Total # of Shootings")+ggtitle("Raza del Autor del Tiroteo")
+Bar_PERP_RACE+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # 4-VIC_AGE_GROUP
 Count_VIC_AGE_GROUP = NYPD %>% group_by(VIC_AGE_GROUP) %>% count(VIC_AGE_GROUP)
 
-(Bar_VIC_AGE_GROUP<-ggplot(Count_VIC_AGE_GROUP,aes(x=reorder(VIC_AGE_GROUP,-n),y=n))+
-    geom_bar(stat='identity'))
+Bar_VIC_AGE_GROUP<-ggplot(Count_VIC_AGE_GROUP,aes(x=reorder(VIC_AGE_GROUP,-n),y=as.numeric(n),fill=n))+
+  geom_col()+
+  scale_fill_gradient(low = "blue1",high='blue4')+ theme_calc()+
+  xlab("Age") + ylab("Total # of Shootings")+ggtitle("Edad de la Victima del Tiroteo")
+Bar_VIC_AGE_GROUP+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # 5-VIC_RACE
 Count_VIC_RACE = NYPD %>% group_by(VIC_RACE) %>% count(VIC_RACE)
 
-(Bar_VIC_RACE<-ggplot(Count_VIC_RACE,aes(x=reorder(VIC_RACE,-n),y=n))+
-    geom_bar(stat='identity'))
-
+Bar_VIC_RACE<-ggplot(Count_VIC_RACE,aes(x=reorder(VIC_RACE,-n),y=as.numeric(n),fill=n))+
+  geom_col()+
+  scale_fill_gradient(low = "Yellow",high='Red')+ theme_calc()+
+  xlab("Race") + ylab("Total # of Shootings")+ggtitle("Raza de la Victima del Tiroteo")
+Bar_VIC_RACE+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # Pie Charts --------------------------------------------------------------
 
@@ -67,10 +73,12 @@ Count_STATISTICAL_MURDER_FLAG$ymax = cumsum(Count_STATISTICAL_MURDER_FLAG$fracti
 Count_STATISTICAL_MURDER_FLAG$ymin = c(0, head(Count_STATISTICAL_MURDER_FLAG$ymax, n=-1))
 Count_STATISTICAL_MURDER_FLAG
 
-ggplot(Count_STATISTICAL_MURDER_FLAG, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=STATISTICAL_MURDER_FLAG)) +
+PIE_1<-ggplot(Count_STATISTICAL_MURDER_FLAG, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=STATISTICAL_MURDER_FLAG)) +
   geom_rect()+
   coord_polar(theta="y")+
-  xlim(c(2, 4)) + theme_void()
+  xlim(c(2, 4)) + theme_wsj() +
+  ggtitle("Muertes en Tiroteos")
+PIE_1+theme(legend.position = "none")+  scale_y_continuous(labels = comma)
 
 # 2 - PERP_SEX
 Count_PERP_SEX = NYPD %>% group_by(PERP_SEX) %>% count(PERP_SEX)
@@ -98,8 +106,6 @@ ggplot(Count_VIC_SEX, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=VIC_SEX)) +
   coord_polar(theta="y")+
   xlim(c(2, 4)) + theme_void()
 
-# Bubble Size to a Numeric Variable ------------------------------------------------------------------
-
 # Sankey Diagram ----------------------------------------------------------
 
 # Race
@@ -123,6 +129,7 @@ df_Sankey_2<-transform(df_Sankey_2,PERP_AGE_GROUP=as.character(PERP_AGE_GROUP),V
 df_Sankey_2[(df_Sankey_2=='1020')]<-''
 df_Sankey_2[df_Sankey_2=='224']<-''
 df_Sankey_2[df_Sankey_2=='940']<-""
+df_Sankey_2[df_Sankey_2=='65+']<-""
 df_Sankey_2[df_Sankey_2=='']<-NaN
 df_Sankey_2<-na.omit(df_Sankey_2)
 table_Sankey_2<-as.data.frame(table(df_Sankey_2))
@@ -130,11 +137,12 @@ table_Sankey_2[table_Sankey_2=='UNKNOWN']<-NaN
 table_Sankey_2<-na.omit(table_Sankey_2)
 table_Sankey_2
 
-alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col = 1:5)
+alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Black',col=1:4)
 
 # New York Maps -----------------------------------------------------------
 
 register_google("[api key]")
+register_google("[API]")
 NYC.map <- get_map("New york city, USA",zoom=11)
 
 
@@ -165,21 +173,73 @@ ggmap(NYC.map) + geom_point(data = locationShootings, aes(x = long, y = lat, alp
 
 
 
-# Perpetrator ethnicity bubble map ----------------------------------------
-## Remover los datos sin localización
+# Perpetrator ethnicity bubble map -Manhatan ----------------------------------------
+## Obtener el mapa
 
-NYPDmap2 <- NYPD
-NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
-NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
-NYPDmap2$PERP_RACE[NYPD$PERP_RACE == ''] <- NA
-NYPDmap2 <- na.omit(NYPDmap2)
+Manhatan.map <- get_map("Manhatan, New York City, USA",zoom=13)
 
-#Crear el dataframe con coordenadas y frecuencia
-locationShootings2 <- as.data.frame(table(NYPDmap2$Longitude, NYPDmap2$Latitude,NYPDmap2$PERP_RACE))
-names(locationShootings2) <- c('long', 'lat', 'Race')
-locationShootings2$long <- as.numeric(as.character(locationShootings2$long))
-locationShootings2$lat <- as.numeric(as.character(locationShootings2$lat))
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(Manhatan.map) 
+ 
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Manhatan.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Bronx ----------------------------------------
+## Obtener el mapa
+
+Bronx.map <- get_map("Bronx, New York City, USA",zoom=12)
+
+#Visualizamos el mapa del Bronx para determinar el zoom adecuado
+ggmap(Bronx.map) 
 
 
-ggmap(NYC.map) + geom_point(data =locationShootings2, aes(x = long, y = lat, colour = Race))
-          +theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Bronx.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Queens ----------------------------------------
+## Obtener el mapa
+
+Queens.map <- get_map("Queens, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Queens para determinar el zoom adecuado
+ggmap(Queens.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Queens.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+
+# Perpetrator ethnicity bubble map -Brooklyn ----------------------------------------
+## Obtener el mapa
+
+Brooklyn.map <- get_map("Brooklyin, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(Brooklyn.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Brooklyn.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Staten island ----------------------------------------
+## Obtener el mapa
+
+StatenIsland.map <- get_map("Staten island, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(StatenIsland.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(StatenIsland.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
