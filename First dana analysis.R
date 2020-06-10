@@ -134,7 +134,7 @@ alluvial(table_Sankey_2[,1:2],freq=table_Sankey_2$Freq,alpha = 0.5,border = 'Bla
 
 # New York Maps -----------------------------------------------------------
 
-register_google("[api key]")
+register_google("[API]")
 NYC.map <- get_map("New york city, USA",zoom=11)
 
 
@@ -165,21 +165,73 @@ ggmap(NYC.map) + geom_point(data = locationShootings, aes(x = long, y = lat, alp
 
 
 
-# Perpetrator ethnicity bubble map ----------------------------------------
-## Remover los datos sin localización
+# Perpetrator ethnicity bubble map -Manhatan ----------------------------------------
+## Obtener el mapa
 
-NYPDmap2 <- NYPD
-NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
-NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
-NYPDmap2$PERP_RACE[NYPD$PERP_RACE == ''] <- NA
-NYPDmap2 <- na.omit(NYPDmap2)
+Manhatan.map <- get_map("Manhatan, New York City, USA",zoom=13)
 
-#Crear el dataframe con coordenadas y frecuencia
-locationShootings2 <- as.data.frame(table(NYPDmap2$Longitude, NYPDmap2$Latitude,NYPDmap2$PERP_RACE))
-names(locationShootings2) <- c('long', 'lat', 'Race')
-locationShootings2$long <- as.numeric(as.character(locationShootings2$long))
-locationShootings2$lat <- as.numeric(as.character(locationShootings2$lat))
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(Manhatan.map) 
+ 
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Manhatan.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Bronx ----------------------------------------
+## Obtener el mapa
+
+Bronx.map <- get_map("Bronx, New York City, USA",zoom=12)
+
+#Visualizamos el mapa del Bronx para determinar el zoom adecuado
+ggmap(Bronx.map) 
 
 
-ggmap(NYC.map) + geom_point(data =locationShootings2, aes(x = long, y = lat, colour = Race))
-          +theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Bronx.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Queens ----------------------------------------
+## Obtener el mapa
+
+Queens.map <- get_map("Queens, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Queens para determinar el zoom adecuado
+ggmap(Queens.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Queens.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+
+# Perpetrator ethnicity bubble map -Brooklyn ----------------------------------------
+## Obtener el mapa
+
+Brooklyn.map <- get_map("Brooklyin, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(Brooklyn.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(Brooklyn.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
+# Perpetrator ethnicity bubble map -Staten island ----------------------------------------
+## Obtener el mapa
+
+StatenIsland.map <- get_map("Staten island, New York City, USA",zoom=12)
+
+#Visualizamos el mapa de Manhatan para determinar el zoom adecuado
+ggmap(StatenIsland.map) 
+
+
+#Crear el mapa con los puntos representando asesinatos
+ggmap(StatenIsland.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
+  scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank())
