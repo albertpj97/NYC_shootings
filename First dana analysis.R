@@ -166,8 +166,15 @@ ggmap(NYC.map) + geom_point(data = locationShootings, aes(x = long, y = lat, alp
 
 
 # Perpetrator ethnicity bubble map -Manhatan ----------------------------------------
-## Obtener el mapa
 
+## Remover los datos sin localización o raza
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
+## Obtener el mapa
 Manhatan.map <- get_map("Manhatan, New York City, USA",zoom=13)
 
 #Visualizamos el mapa de Manhatan para determinar el zoom adecuado
@@ -180,8 +187,15 @@ ggmap(Manhatan.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude
   theme(axis.title.y = element_blank(), axis.title.x = element_blank())
 
 # Perpetrator ethnicity bubble map -Bronx ----------------------------------------
-## Obtener el mapa
 
+## Remover los datos sin localización o raza
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
+## Obtener el mapa
 Bronx.map <- get_map("Bronx, New York City, USA",zoom=12)
 
 #Visualizamos el mapa del Bronx para determinar el zoom adecuado
@@ -194,6 +208,13 @@ ggmap(Bronx.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, c
   theme(axis.title.y = element_blank(), axis.title.x = element_blank())
 
 # Perpetrator ethnicity bubble map -Queens ----------------------------------------
+## Remover los datos sin localización o raza
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
 ## Obtener el mapa
 
 Queens.map <- get_map("Queens, New York City, USA",zoom=12)
@@ -209,6 +230,15 @@ ggmap(Queens.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, 
 
 
 # Perpetrator ethnicity bubble map -Brooklyn ----------------------------------------
+
+## Remover los datos sin localización o raza
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
+
 ## Obtener el mapa
 
 Brooklyn.map <- get_map("Brooklyin, New York City, USA",zoom=12)
@@ -223,6 +253,14 @@ ggmap(Brooklyn.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude
   theme(axis.title.y = element_blank(), axis.title.x = element_blank())
 
 # Perpetrator ethnicity bubble map -Staten island ----------------------------------------
+## Remover los datos sin localización o raza
+NYPDmap2 <- NYPD
+NYPDmap2$Latitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$Latitude == ''] <- NA
+NYPDmap2$Longitude[NYPD$PERP_RACE == ''] <- NA
+NYPDmap2 <- na.omit(NYPDmap2)
+
+
 ## Obtener el mapa
 
 StatenIsland.map <- get_map("Staten island, New York City, USA",zoom=12)
