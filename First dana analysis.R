@@ -1,7 +1,6 @@
 cat("\f")
 library(ggplot2)
 library(tidyverse)
-library(networkD3)
 library(ggmap)
 library(alluvial)
 library(ggthemes)
@@ -296,3 +295,4 @@ ggmap(StatenIsland.map)
 ggmap(StatenIsland.map) + geom_point(data =NYPDmap2, aes(x = Longitude, y = Latitude, colour = PERP_RACE)) +
   scale_color_manual(values = c("red", "yellow", "black", "brown", "grey", "green", "blue")) +
   theme(axis.title.y = element_blank(), axis.title.x = element_blank())
+
